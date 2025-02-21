@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Threat Recognition System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container mt-5 text-center">
+    <h1>Threat Recognition System</h1>
+    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg mt-4">Login</a>
+    <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg mt-4">Register</a>
+  </div>
+</body>
+</html>

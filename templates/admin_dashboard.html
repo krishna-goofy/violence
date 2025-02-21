@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Threat Recognition System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+  function stopRecording(incident_id, camera_id, btn) {
+    $.ajax({
+      url: "{{ url_for('stop_recording') }}",
+      type: "POST",
+      data: { incident_id: incident_id, camera_id: camera_id },
+      success: function(response) {
+        // Update the button appearance after stopping the recording:
+        $(btn).prop("disabled", true);
+        $(btn).removeClass("btn-warning").addClass("btn-success");
+        $(btn).text("Recording Stopped");
+      },
+      error: function(err) {
+        alert("Error: " + err.responseJSON.error);
+      }
+    });
+  }
+</script>
+
+
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Admin Dashboard</h2>
+    <a href="{{ url_for('add_camera') }}" class="btn btn-success mb-3">Add New Camera</a>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger mb-3 float-right">Logout</a>
+
+    <h3>Cameras</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Camera URL</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for camera in cameras %}
+          <tr>
+            <td>{{ camera.id }}</td>
+            <td>{{ camera.url }}</td>
+            <td>{{ camera.latitude }}</td>
+            <td>{{ camera.longitude }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4">No cameras registered.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Active Recordings</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Incident ID</th>
+          <th>Camera ID</th>
+          <th>Camera URL</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in active_recordings %}
+          <tr>
+            <td>{{ rec.incident_id }}</td>
+            <td>{{ rec.camera_id }}</td>
+            <td>{{ rec.camera_url }}</td>
+            <td>
+              <button class="btn btn-warning" onclick="stopRecording({{ rec.incident_id }}, {{ rec.camera_id }}, this)">Stop Recording</button>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4">No active recordings.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Incidents</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User Latitude</th>
+          <th>User Longitude</th>
+          <th>Camera ID</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for incident in incidents %}
+          <tr>
+            <td>{{ incident.id }}</td>
+            <td>{{ incident.user_latitude }}</td>
+            <td>{{ incident.user_longitude }}</td>
+            <td>{{ incident.camera_id }}</td>
+            <td>{{ incident.timestamp }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5">No incidents recorded.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+
+
+  </div>
+</body>
+</html>
