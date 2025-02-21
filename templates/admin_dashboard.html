@@ -5,26 +5,23 @@
   <title>Admin Dashboard - Threat Recognition System</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
-  function stopRecording(incident_id, camera_id, btn) {
-    $.ajax({
-      url: "{{ url_for('stop_recording') }}",
-      type: "POST",
-      data: { incident_id: incident_id, camera_id: camera_id },
-      success: function(response) {
-        // Update the button appearance after stopping the recording:
-        $(btn).prop("disabled", true);
-        $(btn).removeClass("btn-warning").addClass("btn-success");
-        $(btn).text("Recording Stopped");
-      },
-      error: function(err) {
-        alert("Error: " + err.responseJSON.error);
-      }
-    });
-  }
-</script>
-
-
+  <script>
+    function stopRecording(incident_id, camera_id, btn) {
+      $.ajax({
+        url: "{{ url_for('stop_recording') }}",
+        type: "POST",
+        data: { incident_id: incident_id, camera_id: camera_id },
+        success: function(response) {
+          $(btn).prop("disabled", true);
+          $(btn).removeClass("btn-warning").addClass("btn-success");
+          $(btn).text("Recording Stopped");
+        },
+        error: function(err) {
+          alert("Error: " + err.responseJSON.error);
+        }
+      });
+    }
+  </script>
 </head>
 <body>
   <div class="container mt-5">
@@ -95,6 +92,7 @@
           <th>User Longitude</th>
           <th>Camera ID</th>
           <th>Timestamp</th>
+          <th>Violence Detected</th>
         </tr>
       </thead>
       <tbody>
@@ -105,18 +103,21 @@
             <td>{{ incident.user_longitude }}</td>
             <td>{{ incident.camera_id }}</td>
             <td>{{ incident.timestamp }}</td>
+            <td>
+              {% if incident.violence_detected %}
+                <span style="color: red;">Yes</span>
+              {% else %}
+                <span style="color: green;">No</span>
+              {% endif %}
+            </td>
           </tr>
         {% else %}
           <tr>
-            <td colspan="5">No incidents recorded.</td>
+            <td colspan="6">No incidents recorded.</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
-
-
-
-
   </div>
 </body>
 </html>
